@@ -1,31 +1,32 @@
 import React, { useState, useEffect } from 'react';
-import { Store, User, Activity } from 'lucide-react';
+import { Store, User, Activity, CheckCircle2 } from 'lucide-react';
 
-const STORE_OPTIONS = [
-    { code: 'LOTTE_KONDAE', label: '롯데 건대점', group: 'TREATMENT' },
-    { code: 'LOTTE_NOWON', label: '롯데 노원점', group: 'TREATMENT' },
-    { code: 'LOTTE_JUNGDONG', label: '롯데 중동점', group: 'CONTROL' },
-    { code: 'LOTTE_YEONGDEUNGPO', label: '롯데 영등포점', group: 'CONTROL' },
-    { code: 'AK_PYEONGTAEK', label: 'AK 평택점', group: 'CONTROL' },
+const STAFF_LIST = [
+    { id: 'staff-1111-1111-1111-111111111111', name: '김민수' },
+    { id: 'staff-2222-2222-2222-222222222222', name: '이서연' },
+    { id: 'staff-3333-3333-3333-333333333333', name: '박지훈' },
 ];
 
+const STORE_INFO = {
+    code: 'HYUNDAI_SHINCHON_LACOSTE',
+    label: '현대백화점 신촌점 (라코스테)'
+};
+
 function StaffLoginScreen({ onLogin }) {
-    const [storeCode, setStoreCode] = useState(STORE_OPTIONS[0].code);
-    const [staffName, setStaffName] = useState('');
+    const [selectedStaffId, setSelectedStaffId] = useState('');
     const [isTreatment, setIsTreatment] = useState(true);
 
     const handleLogin = () => {
-        if (!staffName.trim()) {
-            alert('판메자 이름을 입력해주세요.');
+        if (!selectedStaffId) {
+            alert('판매원(직원)을 선택해주세요.');
             return;
         }
 
-        // Generate UUID polyfill for local testing
-        const staffId = crypto.randomUUID ? crypto.randomUUID() : 'staff-' + Math.random().toString(36).substring(2);
+        const selectedStaff = STAFF_LIST.find(s => s.id === selectedStaffId);
 
-        localStorage.setItem('staff_id', staffId);
-        localStorage.setItem('staff_name', staffName);
-        localStorage.setItem('store_code', storeCode);
+        localStorage.setItem('staff_id', selectedStaff.id);
+        localStorage.setItem('staff_name', selectedStaff.name);
+        localStorage.setItem('store_code', STORE_INFO.code);
         localStorage.setItem('is_treatment', isTreatment ? 'true' : 'false');
 
         onLogin();
@@ -38,59 +39,51 @@ function StaffLoginScreen({ onLogin }) {
                     <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center text-primary mb-4">
                         <Store size={32} />
                     </div>
-                    <h1 className="text-2xl font-bold text-textPrimary">Retail Sync 접속 설정</h1>
-                    <p className="text-sm text-textSecondary mt-2">태블릿/노트북 현장 데이터 수집기</p>
+                    <h1 className="text-2xl font-bold text-textPrimary">Retail Sync 접속</h1>
+                    <p className="text-[16px] font-bold text-primary mt-2">{STORE_INFO.label}</p>
                 </div>
 
-                <div className="flex flex-col gap-5">
-                    {/* 매장 선택 */}
-                    <div className="flex flex-col gap-2">
-                        <label className="text-[14px] font-bold text-textPrimary">소속 매장</label>
-                        <select
-                            value={storeCode}
-                            onChange={(e) => setStoreCode(e.target.value)}
-                            className="w-full h-14 px-4 bg-surface border border-borderGray rounded-xl text-[15px] font-medium focus:outline-none focus:border-primary disabled:opacity-50"
-                        >
-                            {STORE_OPTIONS.map(opt => (
-                                <option key={opt.code} value={opt.code}>{opt.label}</option>
+                <div className="flex flex-col gap-6">
+                    {/* 판매자 다건 선택 (클릭) */}
+                    <div className="flex flex-col gap-3">
+                        <label className="text-[14px] font-bold text-textPrimary">담당자 (직원) 선택</label>
+                        <div className="grid grid-cols-3 gap-3">
+                            {STAFF_LIST.map(staff => (
+                                <button
+                                    key={staff.id}
+                                    onClick={() => setSelectedStaffId(staff.id)}
+                                    className={`relative flex flex-col items-center justify-center h-24 rounded-xl border-2 transition-all tap-active ${selectedStaffId === staff.id
+                                            ? 'border-primary bg-primary/5'
+                                            : 'border-borderGray bg-surface hover:bg-gray-50'
+                                        }`}
+                                >
+                                    {selectedStaffId === staff.id && (
+                                        <CheckCircle2 size={16} className="absolute top-2 right-2 text-primary" fill="currentColor" strokeWidth={3} />
+                                    )}
+                                    <User size={24} className={`mb-2 ${selectedStaffId === staff.id ? 'text-primary' : 'text-gray-400'}`} />
+                                    <span className={`text-[15px] font-bold ${selectedStaffId === staff.id ? 'text-primary' : 'text-textPrimary'}`}>
+                                        {staff.name}
+                                    </span>
+                                </button>
                             ))}
-                        </select>
-                    </div>
-
-                    {/* 판매자 이름 */}
-                    <div className="flex flex-col gap-2">
-                        <label className="text-[14px] font-bold text-textPrimary">판매자 (직원명)</label>
-                        <div className="relative">
-                            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-                                <User size={20} />
-                            </div>
-                            <input
-                                type="text"
-                                value={staffName}
-                                onChange={(e) => setStaffName(e.target.value)}
-                                placeholder="이름을 입력하세요"
-                                className="w-full h-14 pl-12 pr-4 bg-surface border border-borderGray rounded-xl text-[15px] font-medium focus:outline-none focus:border-primary disabled:opacity-50"
-                            />
                         </div>
                     </div>
 
                     {/* 매장 구분 (실험군/대조군) */}
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 mt-2">
                         <label className="text-[14px] font-bold text-textPrimary flex items-center gap-1">
                             <Activity size={16} /> 매장 A/B 그룹 (POC 분석용)
                         </label>
                         <div className="flex bg-surface p-1 rounded-xl border border-borderGray">
                             <button
                                 onClick={() => setIsTreatment(true)}
-                                className={`flex-1 py-3 text-[14px] font-bold rounded-lg transition-colors ${isTreatment ? 'bg-white shadow-sm text-primary border border-gray-200' : 'text-gray-500'
-                                    }`}
+                                className={`flex-1 py-3 text-[14px] font-bold rounded-lg transition-colors ${isTreatment ? 'bg-white shadow-sm text-primary border border-gray-200' : 'text-gray-500'}`}
                             >
                                 실험군 (Treatment)
                             </button>
                             <button
                                 onClick={() => setIsTreatment(false)}
-                                className={`flex-1 py-3 text-[14px] font-bold rounded-lg transition-colors ${!isTreatment ? 'bg-white shadow-sm text-gray-800 border border-gray-200' : 'text-gray-500'
-                                    }`}
+                                className={`flex-1 py-3 text-[14px] font-bold rounded-lg transition-colors ${!isTreatment ? 'bg-white shadow-sm text-gray-800 border border-gray-200' : 'text-gray-500'}`}
                             >
                                 대조군 (Control)
                             </button>
@@ -99,9 +92,9 @@ function StaffLoginScreen({ onLogin }) {
 
                     <button
                         onClick={handleLogin}
-                        className="w-full h-14 bg-primary text-white font-bold text-[16px] rounded-xl mt-4 hover:bg-primary/90 transition-colors tap-active"
+                        className="w-full h-14 bg-primary text-white font-bold text-[16px] rounded-xl mt-4 hover:bg-primary/90 transition-colors tap-active shadow-sm"
                     >
-                        접속하기
+                        로그인 및 시작
                     </button>
                 </div>
             </div>
