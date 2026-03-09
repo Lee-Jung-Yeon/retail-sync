@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { VisitSession, InteractionMemo, FollowUpAction } from '../entities';
+import { VisitSession, InteractionMemo, FollowUpAction, CustomerVoc } from '../entities';
 import { CustomersService } from '../customers/customers.service';
 
 @Injectable()
@@ -10,6 +10,7 @@ export class SessionsService {
         @InjectRepository(VisitSession) private sessionRepo: Repository<VisitSession>,
         @InjectRepository(InteractionMemo) private memoRepo: Repository<InteractionMemo>,
         @InjectRepository(FollowUpAction) private followUpRepo: Repository<FollowUpAction>,
+        @InjectRepository(CustomerVoc) private vocRepo: Repository<CustomerVoc>,
         private customersService: CustomersService,
     ) { }
 
@@ -76,6 +77,25 @@ export class SessionsService {
         return this.memoRepo.save(memo);
     }
 
+    /** VoC 관찰 기록 추가 */
+    async addVoc(sessionId: string, data: {
+        customer_id: string;
+        staff_id: string;
+        satisfaction_score: number;
+        experience_tags?: string[];
+        customer_comment?: string;
+        voc_source?: string;
+    }) {
+        const session = await this.sessionRepo.findOne({ where: { session_id: sessionId } });
+        if (!session) throw new NotFoundException('세션을 찾을 수 없습니다.');
+
+        const voc = this.vocRepo.create({
+            session_id: sessionId,
+            ...data,
+        });
+        return this.vocRepo.save(voc);
+    }
+
     /** 후속 액션 예약 */
     async addFollowUp(sessionId: string, data: {
         customer_id: string;
@@ -94,6 +114,15 @@ export class SessionsService {
     async getSession(sessionId: string) {
         return this.sessionRepo.findOne({
             where: { session_id: sessionId },
+            relations: ['customer', 'fittings', 'fittings.reasons'],
+        });
+    }
+
+    /** 최근 활성 세션 폴링용 */
+    async getLatestSession(staffId: string) {
+        return this.sessionRepo.findOne({
+            where: { staff_id: staffId },
+            order: { session_start: 'DESC' },
             relations: ['customer', 'fittings', 'fittings.reasons'],
         });
     }

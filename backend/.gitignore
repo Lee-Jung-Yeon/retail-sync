@@ -1,0 +1,15 @@
+# Environment
+.env
+.env.local
+
+# Build
+dist/
+build/
+
+# Dependencies
+node_modules/
+package-lock.json
+
+# IDE
+.vscode/
+.idea/

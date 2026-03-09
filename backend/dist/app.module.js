@@ -31,21 +31,13 @@ exports.AppModule = AppModule = __decorate([
             typeorm_1.TypeOrmModule.forRootAsync({
                 imports: [config_1.ConfigModule],
                 inject: [config_1.ConfigService],
-                useFactory: (cfg) => {
-                    const url = cfg.get('DATABASE_URL');
-                    return {
-                        type: 'postgres',
-                        ...(url ? { url } : {
-                            host: cfg.get('DB_HOST', 'localhost'),
-                            port: cfg.get('DB_PORT', 5432),
-                            username: cfg.get('DB_USERNAME', 'rs_admin'),
-                            password: cfg.get('DB_PASSWORD', 'rs_dev_2026'),
-                            database: cfg.get('DB_NAME', 'retail_sync'),
-                        }),
-                        autoLoadEntities: true,
-                        synchronize: false,
-                    };
-                },
+                useFactory: (cfg) => ({
+                    type: 'postgres',
+                    url: cfg.get('DATABASE_URL'),
+                    ssl: cfg.get('NODE_ENV') === 'production' ? { rejectUnauthorized: false } : false,
+                    autoLoadEntities: true,
+                    synchronize: true,
+                }),
             }),
             auth_module_1.AuthModule,
             customers_module_1.CustomersModule,

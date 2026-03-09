@@ -64,43 +64,7 @@ export default function Screen4Voc({ data, update, onComplete, onBack }) {
                     </div>
                 </section>
 
-                {/* Experience Tags */}
-                <section className="animate-slide-up" style={{ display: score > 0 ? 'block' : 'none' }}>
-                    <h3 className="text-[15px] font-bold text-textPrimary mb-3">고객 피드백 키워드 <span className="text-textSecondary font-normal text-[13px]">(선택)</span></h3>
-                    <div className="flex flex-wrap gap-2">
-                        {EXP_TAGS.map(tag => {
-                            const isSelected = tags.includes(tag.id);
-                            // Color tags based on score context: if low score, highlight negative context tags differently
-                            const isNegativeTag = ['WAIT_LONG', 'SIZE_STK'].includes(tag.id);
-
-                            let activeClass = 'bg-textPrimary text-white border-transparent';
-                            if (isSelected && isNegativeTag) activeClass = 'bg-accentRed text-white border-transparent';
-                            else if (isSelected && !isNegativeTag) activeClass = 'bg-primary text-white border-transparent';
-
-                            return (
-                                <button
-                                    key={tag.id}
-                                    onClick={() => toggleTag(tag.id)}
-                                    className={`px-4 py-2.5 rounded-xl font-medium text-[14px] transition-all tap-active border ${isSelected ? activeClass : 'bg-white text-textPrimary border-borderGray hover:bg-gray-50'
-                                        }`}
-                                >
-                                    {tag.label}
-                                </button>
-                            );
-                        })}
-                    </div>
-                </section>
-
-                {/* Optional Comment */}
-                <section className="animate-slide-up" style={{ display: score > 0 ? 'block' : 'none' }}>
-                    <h3 className="text-[15px] font-bold text-textPrimary mb-3">특이사항 코멘트 <span className="text-textSecondary font-normal text-[13px]">(선택)</span></h3>
-                    <textarea
-                        value={comment}
-                        onChange={e => setComment(e.target.value)}
-                        placeholder="기타 고객 불만이나 칭찬 사항이 있었다면 짧게 남겨주세요."
-                        className="w-full h-24 p-4 bg-white border border-borderGray rounded-xl text-[14px] leading-relaxed resize-none focus:outline-none focus:border-primary placeholder:text-gray-400"
-                    />
-                </section>
+                {/* Sections removed for strict tablet input routing */}
 
             </div>
 

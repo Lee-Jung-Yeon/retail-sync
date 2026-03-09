@@ -1,12 +1,13 @@
 import { Repository } from 'typeorm';
-import { VisitSession, InteractionMemo, FollowUpAction } from '../entities';
+import { VisitSession, InteractionMemo, FollowUpAction, CustomerVoc } from '../entities';
 import { CustomersService } from '../customers/customers.service';
 export declare class SessionsService {
     private sessionRepo;
     private memoRepo;
     private followUpRepo;
+    private vocRepo;
     private customersService;
-    constructor(sessionRepo: Repository<VisitSession>, memoRepo: Repository<InteractionMemo>, followUpRepo: Repository<FollowUpAction>, customersService: CustomersService);
+    constructor(sessionRepo: Repository<VisitSession>, memoRepo: Repository<InteractionMemo>, followUpRepo: Repository<FollowUpAction>, vocRepo: Repository<CustomerVoc>, customersService: CustomersService);
     createSession(data: {
         store_code: string;
         staff_id: string;
@@ -44,6 +45,14 @@ export declare class SessionsService {
         input_type: string;
         raw_text: string;
     }): Promise<InteractionMemo>;
+    addVoc(sessionId: string, data: {
+        customer_id: string;
+        staff_id: string;
+        satisfaction_score: number;
+        experience_tags?: string[];
+        customer_comment?: string;
+        voc_source?: string;
+    }): Promise<CustomerVoc>;
     addFollowUp(sessionId: string, data: {
         customer_id: string;
         action_type: string;
@@ -51,4 +60,5 @@ export declare class SessionsService {
         message_content?: string;
     }): Promise<FollowUpAction>;
     getSession(sessionId: string): Promise<VisitSession | null>;
+    getLatestSession(staffId: string): Promise<VisitSession | null>;
 }

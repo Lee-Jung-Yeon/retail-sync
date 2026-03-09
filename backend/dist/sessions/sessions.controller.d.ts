@@ -21,7 +21,9 @@ export declare class SessionsController {
         fittings: import("../entities").FittingRecord[];
     }>;
     end(id: string): Promise<import("../entities").VisitSession>;
+    getLatest(req: any): Promise<import("../entities").VisitSession | null>;
     get(id: string): Promise<import("../entities").VisitSession | null>;
     addMemo(id: string, body: any): Promise<import("../entities").InteractionMemo>;
+    addVoc(id: string, body: any): Promise<import("../entities").CustomerVoc>;
     addFollowUp(id: string, body: any): Promise<import("../entities").FollowUpAction>;
 }

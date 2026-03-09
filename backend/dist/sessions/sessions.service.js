@@ -19,10 +19,11 @@ const typeorm_2 = require("typeorm");
 const entities_1 = require("../entities");
 const customers_service_1 = require("../customers/customers.service");
 let SessionsService = class SessionsService {
-    constructor(sessionRepo, memoRepo, followUpRepo, customersService) {
+    constructor(sessionRepo, memoRepo, followUpRepo, vocRepo, customersService) {
         this.sessionRepo = sessionRepo;
         this.memoRepo = memoRepo;
         this.followUpRepo = followUpRepo;
+        this.vocRepo = vocRepo;
         this.customersService = customersService;
     }
     async createSession(data) {
@@ -65,6 +66,16 @@ let SessionsService = class SessionsService {
         });
         return this.memoRepo.save(memo);
     }
+    async addVoc(sessionId, data) {
+        const session = await this.sessionRepo.findOne({ where: { session_id: sessionId } });
+        if (!session)
+            throw new common_1.NotFoundException('세션을 찾을 수 없습니다.');
+        const voc = this.vocRepo.create({
+            session_id: sessionId,
+            ...data,
+        });
+        return this.vocRepo.save(voc);
+    }
     async addFollowUp(sessionId, data) {
         const followUp = this.followUpRepo.create({
             session_id: sessionId,
@@ -78,6 +89,13 @@ let SessionsService = class SessionsService {
             relations: ['customer', 'fittings', 'fittings.reasons'],
         });
     }
+    async getLatestSession(staffId) {
+        return this.sessionRepo.findOne({
+            where: { staff_id: staffId },
+            order: { session_start: 'DESC' },
+            relations: ['customer', 'fittings', 'fittings.reasons'],
+        });
+    }
 };
 exports.SessionsService = SessionsService;
 exports.SessionsService = SessionsService = __decorate([
@@ -85,7 +103,9 @@ exports.SessionsService = SessionsService = __decorate([
     __param(0, (0, typeorm_1.InjectRepository)(entities_1.VisitSession)),
     __param(1, (0, typeorm_1.InjectRepository)(entities_1.InteractionMemo)),
     __param(2, (0, typeorm_1.InjectRepository)(entities_1.FollowUpAction)),
+    __param(3, (0, typeorm_1.InjectRepository)(entities_1.CustomerVoc)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
+        typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository,
         customers_service_1.CustomersService])

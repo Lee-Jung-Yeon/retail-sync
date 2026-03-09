@@ -19,21 +19,13 @@ import { KpiModule } from './kpi/kpi.module';
         TypeOrmModule.forRootAsync({
             imports: [ConfigModule],
             inject: [ConfigService],
-            useFactory: (cfg: ConfigService) => {
-                const url = cfg.get('DATABASE_URL');
-                return {
-                    type: 'postgres',
-                    ...(url ? { url } : {
-                        host: cfg.get<string>('DB_HOST', 'localhost'),
-                        port: cfg.get<number>('DB_PORT', 5432),
-                        username: cfg.get<string>('DB_USERNAME', 'rs_admin'),
-                        password: cfg.get<string>('DB_PASSWORD', 'rs_dev_2026'),
-                        database: cfg.get<string>('DB_NAME', 'retail_sync'),
-                    }),
-                    autoLoadEntities: true,
-                    synchronize: false,  // We use init.sql for schema
-                };
-            },
+            useFactory: (cfg: ConfigService) => ({
+                type: 'postgres',
+                url: cfg.get('DATABASE_URL'),
+                ssl: cfg.get('NODE_ENV') === 'production' ? { rejectUnauthorized: false } : false,
+                autoLoadEntities: true,
+                synchronize: true, // PoC 단계에서만 true. 운영 시 false로 전환
+            }),
         }),
         AuthModule,
         CustomersModule,

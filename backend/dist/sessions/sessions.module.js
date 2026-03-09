@@ -19,7 +19,7 @@ exports.SessionsModule = SessionsModule;
 exports.SessionsModule = SessionsModule = __decorate([
     (0, common_1.Module)({
         imports: [
-            typeorm_1.TypeOrmModule.forFeature([entities_1.VisitSession, entities_1.InteractionMemo, entities_1.FollowUpAction]),
+            typeorm_1.TypeOrmModule.forFeature([entities_1.VisitSession, entities_1.InteractionMemo, entities_1.FollowUpAction, entities_1.CustomerVoc]),
             customers_module_1.CustomersModule,
         ],
         providers: [sessions_service_1.SessionsService],

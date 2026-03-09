@@ -34,11 +34,17 @@ let SessionsController = class SessionsController {
     end(id) {
         return this.sessionsService.endSession(id);
     }
+    getLatest(req) {
+        return this.sessionsService.getLatestSession(req.user.staff_id);
+    }
     get(id) {
         return this.sessionsService.getSession(id);
     }
     addMemo(id, body) {
         return this.sessionsService.addMemo(id, body);
+    }
+    addVoc(id, body) {
+        return this.sessionsService.addVoc(id, body);
     }
     addFollowUp(id, body) {
         return this.sessionsService.addFollowUp(id, body);
@@ -61,6 +67,13 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], SessionsController.prototype, "end", null);
 __decorate([
+    (0, common_1.Get)('latest'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], SessionsController.prototype, "getLatest", null);
+__decorate([
     (0, common_1.Get)(':id'),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
@@ -75,6 +88,14 @@ __decorate([
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", void 0)
 ], SessionsController.prototype, "addMemo", null);
+__decorate([
+    (0, common_1.Post)(':id/voc'),
+    __param(0, (0, common_1.Param)('id')),
+    __param(1, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", void 0)
+], SessionsController.prototype, "addVoc", null);
 __decorate([
     (0, common_1.Post)(':id/follow-ups'),
     __param(0, (0, common_1.Param)('id')),

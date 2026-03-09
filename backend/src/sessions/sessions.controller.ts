@@ -25,6 +25,11 @@ export class SessionsController {
         return this.sessionsService.endSession(id);
     }
 
+    @Get('latest')
+    getLatest(@Req() req) {
+        return this.sessionsService.getLatestSession(req.user.staff_id);
+    }
+
     @Get(':id')
     get(@Param('id') id: string) {
         return this.sessionsService.getSession(id);
@@ -33,6 +38,11 @@ export class SessionsController {
     @Post(':id/memos')
     addMemo(@Param('id') id: string, @Body() body: any) {
         return this.sessionsService.addMemo(id, body);
+    }
+
+    @Post(':id/voc')
+    addVoc(@Param('id') id: string, @Body() body: any) {
+        return this.sessionsService.addVoc(id, body);
     }
 
     @Post(':id/follow-ups')

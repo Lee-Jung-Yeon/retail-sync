@@ -45,31 +45,16 @@ export default function Screen3Context({ data, update, onNext, onBack }) {
         <div className="flex flex-col h-full bg-surface">
             <div className="flex-1 overflow-y-auto p-5 space-y-6">
 
-                {/* Voice/Text Memo */}
+                {/* Voice/Text Memo Placeholder */}
                 <section>
                     <div className="flex items-center justify-between mb-3">
                         <h3 className="text-[15px] font-bold text-textPrimary flex items-center gap-1.5">
-                            <MessageSquareIcon /> 자유 메모 <span className="text-textSecondary font-normal text-[13px]">(선택)</span>
+                            <MessageSquareIcon /> 자유 메모 <span className="text-textSecondary font-normal text-[13px]"></span>
                         </h3>
-                        <span className="text-[12px] bg-primary/10 text-primary px-2 py-0.5 rounded font-bold">AI 태그 변환</span>
                     </div>
-                    <div className="relative">
-                        <textarea
-                            ref={memoRef}
-                            value={memo}
-                            onChange={e => setMemo(e.target.value)}
-                            placeholder="고객과의 대화나 체형 특징을 편하게 적어주세요. (예: 팔이 긴 체형, 레드 계열 선호)"
-                            className="w-full h-32 p-4 bg-white border-2 border-borderGray rounded-xl text-[15px] leading-relaxed resize-none focus:outline-none focus:border-primary placeholder:text-gray-400"
-                        />
-                        <button
-                            onClick={handleMicClick}
-                            className={`absolute bottom-3 right-3 w-10 h-10 rounded-full flex items-center justify-center transition-all shadow-md ${isRecording ? 'bg-accentRed text-white animate-pulse' : 'bg-primary text-white tap-active'
-                                }`}
-                        >
-                            <Mic size={20} />
-                        </button>
+                    <div className="w-full h-24 bg-gray-50 border-2 border-dashed border-gray-300 rounded-xl flex items-center justify-center">
+                        <span className="text-gray-400 font-medium text-[14px]">노트북에서 상세 메모를 입력하세요</span>
                     </div>
-                    {isRecording && <p className="text-accentRed text-[12px] font-bold mt-2 text-center">음성 인식 중... 말씀해 주세요.</p>}
                 </section>
 
                 {/* Preference Tags */}
