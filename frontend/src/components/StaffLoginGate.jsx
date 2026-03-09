@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Store, User, Activity } from 'lucide-react';
 
 const STORE_OPTIONS = [
