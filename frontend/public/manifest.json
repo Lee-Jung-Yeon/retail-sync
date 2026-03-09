@@ -1,0 +1,21 @@
+{
+    "name": "Retail Sync",
+    "short_name": "Retail Sync",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "theme_color": "#000000",
+    "description": "Offline Fashion Retail Vertical SaaS CRM",
+    "icons": [
+        {
+            "src": "https://raw.githubusercontent.com/antigravity/icons/main/placeholder_192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "https://raw.githubusercontent.com/antigravity/icons/main/placeholder_512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
