@@ -1,8 +1,8 @@
 import { Controller, Get, Post, Param, Query, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+// import { AuthGuard } from '@nestjs/passport';
 import { KpiService } from './kpi.service';
 
-@Controller('api/kpi')
+@Controller('kpi')
 // @UseGuards(AuthGuard('jwt'))
 export class KpiController {
     constructor(private readonly kpiService: KpiService) { }

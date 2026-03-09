@@ -50,11 +50,21 @@ export default function HqDashboardScreen() {
     ];
 
     const chartData = summary ? [
-        { name: '방문객', Treatment: getKpiVal('total_visitors'), Control: Number(summary.control.total_visitors || 0) },
-        { name: '구매건', Treatment: getKpiVal('total_purchases'), Control: Number(summary.control.total_purchases || 0) },
-        { name: '멤버십가입', Treatment: getKpiVal('new_memberships'), Control: Number(summary.control.new_memberships || 0) },
-        { name: '미구매수집', Treatment: getKpiVal('non_purchase_data_count'), Control: Number(summary.control.non_purchase_data_count || 0) },
+        { name: '방문객', Treatment: getKpiVal('total_visitors'), Control: Number(summary.control?.total_visitors || 0) },
+        { name: '구매건', Treatment: getKpiVal('total_purchases'), Control: Number(summary.control?.total_purchases || 0) },
+        { name: '멤버십가입', Treatment: getKpiVal('new_memberships'), Control: Number(summary.control?.new_memberships || 0) },
+        { name: '미구매수집', Treatment: getKpiVal('non_purchase_data_count'), Control: Number(summary.control?.non_purchase_data_count || 0) },
     ] : [];
+
+    if (isLoading && !summary) return <div className="flex items-center justify-center min-h-[calc(100vh-64px)]"><p className="text-gray-500">데이터 로딩 중...</p></div>;
+
+    if (!isLoading && (!summary || (!summary.treatment && !summary.control))) {
+        return (
+            <div className="flex items-center justify-center min-h-[calc(100vh-64px)]">
+                <p className="text-gray-400">KPI 데이터가 아직 없습니다. 시드 데이터를 먼저 생성해주세요.</p>
+            </div>
+        );
+    }
 
     return (
         <div className="flex justify-center min-h-[calc(100vh-64px)] p-6 bg-surface">
@@ -111,7 +121,7 @@ export default function HqDashboardScreen() {
                             </div>
                         </div>
                         <div className="flex-1">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height={300} minWidth={200}>
                                 <BarChart data={chartData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                                     <XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 13, fontWeight: 'bold' }} />

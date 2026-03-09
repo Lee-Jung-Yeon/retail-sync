@@ -14,7 +14,6 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FittingsController = void 0;
 const common_1 = require("@nestjs/common");
-const passport_1 = require("@nestjs/passport");
 const fittings_service_1 = require("./fittings.service");
 let FittingsController = class FittingsController {
     constructor(fittingsService) {
@@ -47,7 +46,6 @@ __decorate([
 ], FittingsController.prototype, "addReasons", null);
 exports.FittingsController = FittingsController = __decorate([
     (0, common_1.Controller)('sessions/:sessionId/fittings'),
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     __metadata("design:paramtypes", [fittings_service_1.FittingsService])
 ], FittingsController);
 //# sourceMappingURL=fittings.controller.js.map

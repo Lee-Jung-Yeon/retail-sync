@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Patch, Param, Query, Body, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+// import { AuthGuard } from '@nestjs/passport';
 import { CustomersService } from './customers.service';
 
 @Controller('customers')
-@UseGuards(AuthGuard('jwt'))
+// @UseGuards(AuthGuard('jwt'))
 export class CustomersController {
     constructor(private customersService: CustomersService) { }
 

@@ -25,9 +25,11 @@ export default function StoreDashboardScreen() {
     const [weeklyData, setWeeklyData] = useState([]);
     const [npReasons, setNpReasons] = useState([]);
     const [vocInfo, setVocInfo] = useState({ avg_score: 0 });
+    const [isLoading, setIsLoading] = useState(true);
 
     const fetchDashboard = async () => {
-        const storeCode = 'KR-001'; // hardcoded for POC 롯데 건대점
+        setIsLoading(true);
+        const storeCode = 'HYUNDAI_SHINCHON_LACOSTE'; // Updated for single store POC
         const [_mgr, _week, _np, _voc] = await Promise.all([
             apiClient.getManagerDashboard(storeCode),
             apiClient.getStoreWeeklyReport(storeCode),
@@ -37,7 +39,8 @@ export default function StoreDashboardScreen() {
 
         if (_mgr) setStats(_mgr);
         if (_week) {
-            const formatted = _week.map(d => ({
+            const weeklyArr = Array.isArray(_week) ? _week : [];
+            const formatted = weeklyArr.map(d => ({
                 day: new Date(d.snapshot_date).toLocaleDateString('ko-KR', { weekday: 'short' }),
                 visitors: Number(d.total_visitors)
             }));
@@ -58,6 +61,7 @@ export default function StoreDashboardScreen() {
             setNpReasons(arr.length > 0 ? arr : [{ name: '데이터 없음', value: 1 }]);
         }
         if (_voc) setVocInfo(_voc);
+        setIsLoading(false);
     };
 
     useEffect(() => {
@@ -67,6 +71,8 @@ export default function StoreDashboardScreen() {
     }, []);
 
     const npCount = npReasons.reduce((acc, curr) => curr.name !== '데이터 없음' ? acc + curr.value : acc, 0);
+
+    if (isLoading && !stats) return <div className="flex items-center justify-center min-h-[calc(100vh-64px)]"><p className="text-gray-500">데이터 로딩 중...</p></div>;
 
     return (
         <div className="flex justify-center min-h-[calc(100vh-64px)] p-6 bg-surface">
@@ -90,7 +96,7 @@ export default function StoreDashboardScreen() {
                             <span className="font-bold text-textPrimary text-[15px]">피팅→구매 전환율</span>
                         </div>
                         <div className="text-3xl font-extrabold text-textPrimary">
-                            {stats && stats.fitting_conversion_funnel.fittings > 0
+                            {stats && stats?.fitting_conversion_funnel?.fittings > 0
                                 ? ((stats.fitting_conversion_funnel.purchases / stats.fitting_conversion_funnel.fittings) * 100).toFixed(1)
                                 : '0.0'} <span className="text-sm font-medium text-gray-400">%</span>
                         </div>
@@ -123,7 +129,7 @@ export default function StoreDashboardScreen() {
                     <div className="bg-white rounded-2xl p-6 shadow-sm border border-borderGray flex flex-col">
                         <h3 className="font-bold text-[16px] text-textPrimary mb-4">미구매 사유 분포</h3>
                         <div className="flex-1">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height={300} minWidth={200}>
                                 <PieChart>
                                     <Pie
                                         data={npReasons}
@@ -146,7 +152,7 @@ export default function StoreDashboardScreen() {
                     <div className="bg-white rounded-2xl p-6 shadow-sm border border-borderGray flex flex-col">
                         <h3 className="font-bold text-[16px] text-textPrimary mb-4">최근 7일 접객 건수 추이</h3>
                         <div className="flex-1 -ml-4">
-                            <ResponsiveContainer width="100%" height="100%">
+                            <ResponsiveContainer width="100%" height={300} minWidth={200}>
                                 <LineChart data={weeklyData}>
                                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                                     <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fill: '#64748b', fontSize: 13 }} />

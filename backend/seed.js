@@ -3,8 +3,14 @@ const fs = require('fs');
 const path = require('path');
 require('dotenv').config();
 
+if (!process.env.DATABASE_URL) {
+    console.error('❌ DATABASE_URL 환경변수가 설정되지 않았습니다.');
+    console.error('   backend/.env 파일에 DATABASE_URL을 설정하세요.');
+    process.exit(1);
+}
+
 const client = new Client({
-    connectionString: process.env.DATABASE_URL || 'postgresql://postgres.ulxqaxrvvyremzbjwhdh:dlwjddus7091@aws-1-ap-northeast-1.pooler.supabase.com:5432/postgres',
+    connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false }
 });
 
@@ -18,7 +24,10 @@ const STAFF_IDS = [
 const GENDERS = ['F', 'F', 'F', 'M'];
 const AGE_GROUPS = ['20', '30', '30', '40', '50'];
 const MEMBERSHIPS = ['MEMBER', 'NON_MEMBER', 'VIP'];
-const REASON_TAGS = ['SIZE', 'PRICE', 'DESIGN', 'MATERIAL', 'MIND'];
+const REASON_TAGS = [
+    'PRICE', 'SIZE_FIT', 'COLOR', 'STYLE_MISMATCH',
+    'TIMING', 'COMPARISON', 'COMPANION', 'STOCK_OUT'
+];
 const CATEGORIES = ['OUTER', 'TOP', 'BOTTOM', 'DRESS', 'ACC'];
 
 function randomChoice(arr) {

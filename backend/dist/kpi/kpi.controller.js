@@ -42,7 +42,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], KpiController.prototype, "getDidAnalysis", null);
 exports.KpiController = KpiController = __decorate([
-    (0, common_1.Controller)('api/kpi'),
+    (0, common_1.Controller)('kpi'),
     __metadata("design:paramtypes", [kpi_service_1.KpiService])
 ], KpiController);
 //# sourceMappingURL=kpi.controller.js.map

@@ -14,16 +14,15 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SessionsController = void 0;
 const common_1 = require("@nestjs/common");
-const passport_1 = require("@nestjs/passport");
 const sessions_service_1 = require("./sessions.service");
 let SessionsController = class SessionsController {
     constructor(sessionsService) {
         this.sessionsService = sessionsService;
     }
-    create(req, body) {
+    create(body) {
         return this.sessionsService.createSession({
-            store_code: req.user.store_code,
-            staff_id: req.user.staff_id,
+            store_code: body.store_code,
+            staff_id: body.staff_id,
             is_treatment: body.is_treatment ?? true,
             customer: body.customer,
             visit_type: body.visit_type,
@@ -34,8 +33,8 @@ let SessionsController = class SessionsController {
     end(id) {
         return this.sessionsService.endSession(id);
     }
-    getLatest(req) {
-        return this.sessionsService.getLatestSession(req.user.staff_id);
+    getLatest(staffId) {
+        return this.sessionsService.getLatestSession(staffId);
     }
     get(id) {
         return this.sessionsService.getSession(id);
@@ -53,10 +52,9 @@ let SessionsController = class SessionsController {
 exports.SessionsController = SessionsController;
 __decorate([
     (0, common_1.Post)(),
-    __param(0, (0, common_1.Req)()),
-    __param(1, (0, common_1.Body)()),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", void 0)
 ], SessionsController.prototype, "create", null);
 __decorate([
@@ -68,9 +66,9 @@ __decorate([
 ], SessionsController.prototype, "end", null);
 __decorate([
     (0, common_1.Get)('latest'),
-    __param(0, (0, common_1.Req)()),
+    __param(0, (0, common_1.Query)('staff_id')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
 ], SessionsController.prototype, "getLatest", null);
 __decorate([
@@ -106,7 +104,6 @@ __decorate([
 ], SessionsController.prototype, "addFollowUp", null);
 exports.SessionsController = SessionsController = __decorate([
     (0, common_1.Controller)('sessions'),
-    (0, common_1.UseGuards)((0, passport_1.AuthGuard)('jwt')),
     __metadata("design:paramtypes", [sessions_service_1.SessionsService])
 ], SessionsController);
 //# sourceMappingURL=sessions.controller.js.map

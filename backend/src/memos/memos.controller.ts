@@ -1,9 +1,9 @@
 import { Controller, Post, Param, Body, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+// import { AuthGuard } from '@nestjs/passport';
 import { MemosService } from './memos.service';
 
-@Controller('api/memos')
-@UseGuards(AuthGuard('jwt'))
+@Controller('memos')
+// @UseGuards(AuthGuard('jwt'))
 export class MemosController {
     constructor(private readonly memosService: MemosService) { }
 

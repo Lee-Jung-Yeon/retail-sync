@@ -1,17 +1,17 @@
-import { Controller, Post, Patch, Get, Param, Body, UseGuards, Req } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+import { Controller, Post, Patch, Get, Param, Query, Body, UseGuards, Req } from '@nestjs/common';
+// import { AuthGuard } from '@nestjs/passport';
 import { SessionsService } from './sessions.service';
 
 @Controller('sessions')
-@UseGuards(AuthGuard('jwt'))
+// @UseGuards(AuthGuard('jwt'))
 export class SessionsController {
     constructor(private sessionsService: SessionsService) { }
 
     @Post()
-    create(@Req() req, @Body() body: any) {
+    create(@Body() body: any) {
         return this.sessionsService.createSession({
-            store_code: req.user.store_code,
-            staff_id: req.user.staff_id,
+            store_code: body.store_code,
+            staff_id: body.staff_id,
             is_treatment: body.is_treatment ?? true,
             customer: body.customer,
             visit_type: body.visit_type,
@@ -26,8 +26,8 @@ export class SessionsController {
     }
 
     @Get('latest')
-    getLatest(@Req() req) {
-        return this.sessionsService.getLatestSession(req.user.staff_id);
+    getLatest(@Query('staff_id') staffId: string) {
+        return this.sessionsService.getLatestSession(staffId);
     }
 
     @Get(':id')

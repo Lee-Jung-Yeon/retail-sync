@@ -2,7 +2,7 @@ import { SessionsService } from './sessions.service';
 export declare class SessionsController {
     private sessionsService;
     constructor(sessionsService: SessionsService);
-    create(req: any, body: any): Promise<{
+    create(body: any): Promise<{
         customer: import("../entities").Customer;
         session_id: string;
         customer_id: string;
@@ -21,7 +21,7 @@ export declare class SessionsController {
         fittings: import("../entities").FittingRecord[];
     }>;
     end(id: string): Promise<import("../entities").VisitSession>;
-    getLatest(req: any): Promise<import("../entities").VisitSession | null>;
+    getLatest(staffId: string): Promise<import("../entities").VisitSession | null>;
     get(id: string): Promise<import("../entities").VisitSession | null>;
     addMemo(id: string, body: any): Promise<import("../entities").InteractionMemo>;
     addVoc(id: string, body: any): Promise<import("../entities").CustomerVoc>;

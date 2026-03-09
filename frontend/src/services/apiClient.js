@@ -33,7 +33,7 @@ export const apiClient = {
     async getLatestSession(staffId) {
         const token = localStorage.getItem('token');
         try {
-            const res = await fetch(`${API_BASE}/sessions/latest`, {
+            const res = await fetch(`${API_BASE}/sessions/latest?staff_id=${staffId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (res.ok) return await res.json();

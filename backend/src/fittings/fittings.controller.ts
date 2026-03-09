@@ -1,9 +1,9 @@
 import { Controller, Post, Param, Body, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport';
+// import { AuthGuard } from '@nestjs/passport';
 import { FittingsService } from './fittings.service';
 
 @Controller('sessions/:sessionId/fittings')
-@UseGuards(AuthGuard('jwt'))
+// @UseGuards(AuthGuard('jwt'))
 export class FittingsController {
     constructor(private fittingsService: FittingsService) { }
 
